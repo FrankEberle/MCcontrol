@@ -1,0 +1,175 @@
+#!/usr/bin/haserl
+<%
+
+#
+# Copyright (c) 2018 Frank Eberle // www.frank-eberle.de
+# 
+
+. /etc/mccontrol_cgi.conf
+
+
+ERR_UNKNOWN_METHOD=-1
+ERR_REQ_FAILED=-2
+
+sendJsonHeader()
+{
+	printf "Status: 200 OK\n"
+	printf "Content-Type: application/json\n"
+	printf "\n"
+}
+
+sendJpegHeader()
+{
+	printf "Status: 200 OK\n"
+	printf "Content-Type: image/jpeg\n"
+	printf "\n"
+}
+
+sendError()
+{
+	local CODE="$1"
+	local MSG="$2"
+	
+	printf "{\"status\":%d, \"data\":\"%s\"}\n" "$CODE" "$MSG"
+}
+
+
+resultStart()
+{
+	printf "{\"status\":0, \"data\":\n"
+}
+
+resultEnd()
+{
+	printf "}\n"
+}
+
+
+createDeviceList()
+{
+	printf "["
+	FIRST=1
+	for I in ${DEV_LIST}; do
+		DEV_NAME=$(eval echo \$DEV_NAME_${I})
+		if [ $FIRST = "1" ]; then
+			FIRST=0
+		else
+			printf ","
+		fi
+		printf "{\"id\":\"%s\", \"name\":\"%s\"}" $I $DEV_NAME
+	done
+	printf "]\n"
+}
+
+
+getDevAddr()
+{
+	local DEVICE=$1
+	for I in ${DEV_LIST}; do
+		if [ "$I" = "$DEVICE" ]; then
+			eval echo \$DEV_ADDR_${I}
+			break
+		fi
+	done	
+}
+
+
+DEV_ADDR=$(getDevAddr $FORM_device)
+case "$FORM_method" in
+	getDeviceList)
+		sendJsonHeader
+		resultStart
+		createDeviceList
+		resultEnd
+		;;
+	getPresetInfo)
+		sendJsonHeader
+		DATA=$(wget -q -O - http://${DEV_ADDR}/YamahaExtendedControl/v1/netusb/getPresetInfo)
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;
+	getPlayInfo)
+		sendJsonHeader
+		DATA=$(wget -q -O - http://${DEV_ADDR}/YamahaExtendedControl/v1/netusb/getPlayInfo)
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request ${DEV_ADDR}"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;
+	recallPreset)
+		sendJsonHeader
+		DATA=$(wget -q -O - "http://${DEV_ADDR}/YamahaExtendedControl/v1/netusb/recallPreset?zone=main&num=${FORM_num}")
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;
+	getStatus)
+		sendJsonHeader
+		DATA=$(wget -q -O - "http://${DEV_ADDR}/YamahaExtendedControl/v1/main/getStatus")
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;
+	getFeatures)
+		sendJsonHeader
+		DATA=$(wget -q -O - "http://${DEV_ADDR}/YamahaExtendedControl/v1/system/getFeatures")
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;
+	netUsbSetPlayback)
+		sendJsonHeader
+		DATA=$(wget -q -O - "http://${DEV_ADDR}/YamahaExtendedControl/v1/netusb/setPlayback?playback=${FORM_playback}")
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;		
+	setVolume)
+		sendJsonHeader
+		DATA=$(wget -q -O - "http://${DEV_ADDR}/YamahaExtendedControl/v1/main/setVolume?volume=${FORM_volume}")
+		if [ $? != "0" ]; then
+			sendError $ERR_REQ_FAILED "Failed to send HTTP request"
+			exit 0
+		fi
+		resultStart
+		echo "$DATA"
+		resultEnd
+		;;		
+	albumArt)
+		sendJpegHeader
+		wget -q -O - http://${DEV_ADDR}/YamahaRemoteControl/AlbumART/$FORM_image
+		;;
+	*)
+		sendJsonHeader
+		sendError $ERR_UNKNOWN_METHOD "Unknown method"
+		;;
+esac
+
+
+
+
+%>

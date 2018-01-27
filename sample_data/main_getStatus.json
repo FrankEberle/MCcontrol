@@ -1,0 +1,18 @@
+{
+    "response_code":0,
+    "power":"on",
+    "sleep":0,
+    "volume":12,
+    "mute":false,
+    "max_volume":60,
+    "input":"net_radio",
+    "distribution_enable":true,
+    "equalizer":{
+        "mode":"manual",
+        "low":-5,
+        "mid":0,
+        "high":8
+    },
+    "link_control":"standard",
+    "disable_flags":0
+}

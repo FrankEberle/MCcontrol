@@ -1,0 +1,78 @@
+<!doctype html>
+
+<!--
+Copyright (c) 2018 Frank Eberle // www.frank-eberle.de
+-->
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <link rel="stylesheet" href="mccontrol.css">
+        <link rel="stylesheet" href="fontawesome-all.min.css">
+        <script src="jquery-3.2.1.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        <script src="mccontrol.js"></script>
+        <script>
+            $(document).ready(onDocReady);
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarOptions"
+               aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+            </button>
+            <span class="navbar-brand mb-0 h1">MCcontrol</span>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarOptions">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse.in" data-view="devices" href="#">Devices</a>
+                    </li>    
+                    <li class="nav-item active">
+                        <a class="nav-link disabled" data-toggle="collapse" data-target=".navbar-collapse.in" data-view="player" href="#">Control</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" data-toggle="collapse" data-target=".navbar-collapse.in" data-view="presets" href="#">Presets</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-text" id="deviceName"></div>
+        </nav>
+
+        <main role="main" class="container">
+            <div id="waitMsg" class="alert alert-primary" style="display:none" role="alert">
+                Please wait ...
+            </div>
+            <div class="view" id="playerView" style="display:none;">
+                <div id="artistInfo" class="playCont"></div>
+                <div id="albumTrackInfo" class="playCont"></div>
+                <div id="albumArt" class="playCont"></div>
+                <div id="controlButtons" class="btn-group justify-content-center w-100 playCont">
+                    <button data-func="previous" type="button" class="fas fa-step-backward btn btn-outline-dark btn-lg"></button>
+                    <button data-func="play" type="button" class="fas fa-play btn btn-outline-dark btn-lg"></button>
+                    <button data-func="pause" type="button" class="fas fa-pause btn btn-outline-dark btn-lg"></button>
+                    <button data-func="stop" type="button" class="fas fa-stop btn btn-outline-dark btn-lg"></button>
+                    <button data-func="next" type="button" class="fas fa-step-forward btn btn-outline-dark btn-lg"></button>
+                </div>
+                <div class="playCont justify-content-center">
+                    Volume <input type="range" min="0" max="100" value="50" id="volume" class="mx-auto">
+                </div>
+            </div>
+
+            <div class="view" id="presetsView" style="display:none;">
+                <div class="btn-group-vertical w-100" id="presetsButtons">
+                </div>
+            </div>
+
+            <div class="view" id="devicesView" style="display:none;">
+                <div class="btn-group-vertical w-100" id="deviceButtons">
+                </div>
+            </div>
+
+        </main>
+    </body>
+</html>

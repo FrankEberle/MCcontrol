@@ -1,0 +1,34 @@
+/*
+
+Copyright (c) 2018 Frank Eberle // www.frank-eberle.de
+
+*/
+
+
+body {
+    padding-top: 5rem;
+}
+
+.preset-btn {
+    width: 100%;
+}
+
+input[type=range] {
+    width: 100%;
+}
+
+@media (min-width: 300px) {
+    input[type=range] {
+        width: 300px;
+    }    
+}
+
+.playCont {
+    text-align: center;
+    margin-top: 2ex;
+    width: 100%;
+}
+
+#albumArt img {
+    width: 200px;
+}
