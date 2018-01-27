@@ -25,4 +25,13 @@ devices. All other requirements should already be available on LEDE / OpenWRT
 and other distros.
 
 ## Installation
+* Make sure Haserl is installed.
+* Create config file /etc/mccontrol_cgi.conf
+  (see [doc/sample-mccontrol_cgi.conf](doc/sample-mccontrol_cgi.conf) for an
+  example).
+* Put all files contained in [www](www) in a directory below your docroot
+  and setup CGI properly.
+
+If you're using LEDE / OpenWRT then
+[misc/uhttpd_wrapper.lua](misc/uhttpd_wrapper.lua) could be useful for you.
 
